@@ -17,6 +17,10 @@
 #ifndef HOTLOAD_LIBRARY
 #error "HOTLOAD_LIBRARY must be defined"
 #endif
+
+#if defined(PLATFORM_WEB)
+#error "hotload not supported on web builds"
+#endif
 #endif
 
 namespace bb::hotload {
