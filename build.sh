@@ -57,6 +57,17 @@ build_hot() {
     copy_compile_commands
 }
 
+# Function to run hotreload version
+run_hot() {
+    mkdir -p build
+    cd build
+    cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+    make ${BINARY_NAME}_lib ${BINARY_NAME}_hotload
+    cd ..
+    copy_compile_commands
+    ./build/${BINARY_NAME}_hotload
+}
+
 # Function to run native version
 run_native() {
     build_native
@@ -96,6 +107,9 @@ case "$1" in
                 ;;
             "native"|"")
                 run_native
+                ;;
+            "hot")
+                run_hot
                 ;;
             *)
                 echo "Unknown run target: $2"

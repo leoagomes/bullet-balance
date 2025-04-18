@@ -30,12 +30,15 @@ private:
 
     // releases the loaded library and loads it again
     void reload_library() {
+        TraceLog(LOG_INFO, "[hotload] releasing old library");
         if (lib) lib.reset();
+        TraceLog(LOG_INFO, "[hotload] loading library");
         lib = std::make_unique<dylib>(HOTLOAD_LIBRARY_DIR, HOTLOAD_LIBRARY);
     }
 
     // rebinds the library's functions
     void rebind_library() {
+        TraceLog(LOG_INFO, "[hotload] binding functions");
         if (lib) {
             _init_gamestate = lib->get_function<GameState*(void)>("init_gamestate");
             _free_gamestate = lib->get_function<void(GameState*)>("free_gamestate");
@@ -45,6 +48,7 @@ private:
 
     // reloads, rebinds
     void reload() {
+        TraceLog(LOG_INFO, "[hotload] reloading");
         reload_library();
         rebind_library();
     }
