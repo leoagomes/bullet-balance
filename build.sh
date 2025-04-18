@@ -47,6 +47,16 @@ build_web() {
     copy_compile_commands
 }
 
+# Function to build hotreload library
+build_hot() {
+    mkdir -p build
+    cd build
+    cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+    make ${BINARY_NAME}_lib
+    cd ..
+    copy_compile_commands
+}
+
 # Function to run native version
 run_native() {
     build_native
@@ -69,6 +79,9 @@ case "$1" in
                 ;;
             "native"|"")
                 build_native
+                ;;
+            "hot")
+                build_hot
                 ;;
             *)
                 echo "Unknown build target: $2"
@@ -97,7 +110,7 @@ case "$1" in
         build_native
         ;;
     *)
-        echo "Usage: $0 [build|run|clean] [native|web]"
+        echo "Usage: $0 [build|run|clean] [native|web|hot]"
         exit 1
         ;;
 esac
