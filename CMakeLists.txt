@@ -1,24 +1,22 @@
 cmake_minimum_required(VERSION 4.0)
-project(
-	bullet_balance
-	VERSION 0.1
-	LANGUAGES C CXX
-)
+project(bullet_balance)
 
 # raylib
+set(RAYLIB_VERSION 5.5)
 find_package(raylib QUIET)
 if (NOT raylib_FOUND)
     include(FetchContent)
     FetchContent_Declare(
         raylib
         GIT_REPOSITORY https://github.com/raysan5/raylib.git
-        GIT_TAG 5e6cdf3
+        GIT_TAG ${RAYLIB_VERSION}
         GIT_SHALLOW 1
     )
     FetchContent_MakeAvailable(raylib)
 endif()
 
 # raylib-cpp
+set(RAYLIB_CPP_VERSION v5.5.0)
 find_package(raylib_cpp QUIET)
 if (NOT raylib_cpp_FOUND)
     if (NOT DEFINED RAYLIB_CPP_VERSION)
@@ -45,13 +43,13 @@ set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 20)
 set_target_properties(${PROJECT_NAME} PROPERTIES C_STANDARD 99)
 
 file(GLOB_RECURSE SOURCES
-	${SOURCE_DIR}/*.cpp
-	${SOURCE_DIR}/*.cc
-	${SOURCE_DIR}/*.c)
+    ${SOURCE_DIR}/*.cpp
+    ${SOURCE_DIR}/*.cc
+    ${SOURCE_DIR}/*.c)
 target_include_directories(
-	${PROJECT_NAME}
-	${INCLUDE_DIR}
-	${JANET_DIR})
+    ${PROJECT_NAME}
+    ${INCLUDE_DIR}
+    ${JANET_DIR})
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_link_libraries(${PROJECT_NAME} PUBLIC raylib raylib_cpp)
