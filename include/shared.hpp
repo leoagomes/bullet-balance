@@ -1,4 +1,4 @@
 #pragma once
 
-struct GameState {};
+#include "game_state.hpp"
 
