@@ -46,9 +46,9 @@ private:
     void rebind_library() {
         TraceLog(LOG_INFO, "[hotload] binding functions");
         if (lib) {
-            _initialize = lib->get_function<GameState*(void)>("bb_hotload_initialize");
+            _initialize = lib->get_function<State*(void)>("bb_hotload_initialize");
             _update = lib->get_function<void(void)>("bb_hotload_release");
-            _release = lib->get_function<void(GameState*)>("bb_hotload_update");
+            _release = lib->get_function<void(State*)>("bb_hotload_update");
         }
     }
 
