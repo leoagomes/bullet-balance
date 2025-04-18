@@ -1,18 +1,18 @@
 #include <raylib.h>
 #include <raylib-cpp.hpp>
 
-#include "game_hotload.hpp"
+#include "hotload/interface.hpp"
 
-GameState* init_gamestate(void) {
+bb::GameState* bb_hotload_initialize(void) {
     return nullptr;
 }
 
-void update_draw_frame(void) {
+void bb_hotload_update(void) {
     BeginDrawing();
         ClearBackground(RAYWHITE);
         raylib::DrawText("second window!", 100, 100, 20, BLACK);
     EndDrawing();
 }
 
-void free_gamestate(GameState* state) {}
+void bb_hotload_release(bb::GameState* state) {}
 

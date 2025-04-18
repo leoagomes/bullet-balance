@@ -4,8 +4,8 @@
 
 #include <functional>
 
-#include "shared.hpp"
-#include "game_hotload.hpp"
+#include "game_state.hpp"
+#include "hotload/interface.hpp"
 
 #if defined(HOTLOAD)
 #include <memory>
@@ -19,11 +19,13 @@
 #endif
 #endif
 
-class GameInterface {
+namespace bb::hotload {
+
+class Instance {
 private:
-    std::function<GameState*(void)> _init_gamestate;
-    std::function<void(GameState*)> _free_gamestate;
-    std::function<void(void)> _update_draw_frame;
+    std::function<GameState*(void)> _initialize;
+    std::function<void(void)> _update;
+    std::function<void(GameState*)> _release;
 
 #if defined(HOTLOAD)
     std::unique_ptr<dylib> lib = nullptr;
@@ -40,9 +42,9 @@ private:
     void rebind_library() {
         TraceLog(LOG_INFO, "[hotload] binding functions");
         if (lib) {
-            _init_gamestate = lib->get_function<GameState*(void)>("init_gamestate");
-            _free_gamestate = lib->get_function<void(GameState*)>("free_gamestate");
-            _update_draw_frame = lib->get_function<void(void)>("update_draw_frame");
+            _initialize = lib->get_function<GameState*(void)>("bb_hotload_initialize");
+            _update = lib->get_function<void(void)>("bb_hotload_release");
+            _release = lib->get_function<void(GameState*)>("bb_hotload_update");
         }
     }
 
@@ -66,17 +68,17 @@ private:
     }
 #else
     void prepare() {
-        _init_gamestate = ::init_gamestate;
-        _free_gamestate = ::free_gamestate;
-        _update_draw_frame = ::update_draw_frame;
+        _initialize = ::bb_hotload_initialize;
+        _update = ::bb_hotload_update;
+        _release = ::bb_hotload_release;
     }
 #endif
 
 public:
     GameState* state = nullptr;
 
-    GameInterface() {}
-    ~GameInterface() {
+    Instance() {}
+    ~Instance() {
         terminate();
     }
 
@@ -84,13 +86,13 @@ public:
         // this will either bind the dynamic library or just set
         // the static functions
         prepare();
-        state = _init_gamestate();
+        state = _initialize();
         return state;
     }
 
     void terminate() {
         if (state == nullptr) return;
-        _free_gamestate(state);
+        _release(state);
         state = nullptr;
     }
 
@@ -99,7 +101,9 @@ public:
         check_hot_reload();
         #endif
 
-        _update_draw_frame();
+        _update();
     }
+};
+
 };
 

@@ -2,7 +2,7 @@
 // In a static build (HOTLOAD not defined) this is statically linked.
 #pragma once
 
-#include "shared.hpp"
+#include "game_state.hpp"
 
 #if defined(HOTLOAD) && (defined(_WIN32) || defined(_WIN64))
 #define LIB_EXPORT __declspec(dllexport)
@@ -11,7 +11,7 @@
 #endif
 
 extern "C" {
-LIB_EXPORT GameState* init_gamestate(void);
-LIB_EXPORT void update_draw_frame(void);
-LIB_EXPORT void free_gamestate(GameState*);
+LIB_EXPORT bb::GameState* bb_hotload_initialize(void);
+LIB_EXPORT void bb_hotload_update(void);
+LIB_EXPORT void bb_hotload_release(bb::GameState*);
 };

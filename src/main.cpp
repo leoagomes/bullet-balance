@@ -1,7 +1,7 @@
 #include <raylib-cpp.hpp>
 #include <raylib.h>
 
-#include "game_interface.hpp"
+#include "hotload/instance.hpp"
 
 #if defined(PLATFORM_WEB)
 #include <emscripten/emscripten.h>
@@ -11,11 +11,11 @@ int screen_width = 800;
 int screen_height = 450;
 int target_fps = 60;
 
-GameInterface interface;
+bb::hotload::Instance game;
 
 int main(void) {
     // loads the game interface (hot-reloaded or static)
-    interface.initialize();
+    game.initialize();
 
     // initialize the window
     raylib::Window window(screen_width, screen_height, "test window");
@@ -27,12 +27,12 @@ int main(void) {
     SetTargetFPS(target_fps);
 
     while (!window.ShouldClose()) {
-        interface.update();
+        game.update();
     }
 #endif
 
     // cleans up the data
-    interface.terminate();
+    game.terminate();
     return 0;
 }
 
