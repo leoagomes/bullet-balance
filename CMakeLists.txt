@@ -38,24 +38,23 @@ file(GLOB JANET_SOURCES ${JANET_DIR}/*.c)
 # Main project
 set(INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set(SOURCE_DIR ${PROJECT_SOURCE_DIR}/src)
-
-set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 20)
-set_target_properties(${PROJECT_NAME} PROPERTIES C_STANDARD 99)
-
 file(GLOB_RECURSE SOURCES
     ${SOURCE_DIR}/*.cpp
     ${SOURCE_DIR}/*.cc
     ${SOURCE_DIR}/*.c)
+add_executable(${PROJECT_NAME} ${SOURCES})
 target_include_directories(
     ${PROJECT_NAME}
-    ${INCLUDE_DIR}
-    ${JANET_DIR})
+    PUBLIC ${INCLUDE_DIR}
+    PUBLIC ${JANET_DIR})
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 20)
+set_target_properties(${PROJECT_NAME} PROPERTIES C_STANDARD 99)
+
 target_link_libraries(${PROJECT_NAME} PUBLIC raylib raylib_cpp)
 
 # Web Configurations
-if (${PLATFORM} STREQUAL "Web")
+if (${PLATFORM} MATCHES "Web")
     # Tell Emscripten to build an example.html file.
     set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".html")
 
