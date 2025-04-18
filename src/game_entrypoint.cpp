@@ -16,3 +16,6 @@ void bb_hotload_update(void) {
 
 void bb_hotload_release(bb::State* state) {}
 
+void bb_hotload_enter(bb::State *) {}
+void bb_hotload_leave(void) {}
+

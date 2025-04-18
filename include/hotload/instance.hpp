@@ -31,37 +31,47 @@ private:
     std::function<void(void)> _update;
     std::function<void(State*)> _release;
 
+    std::function<void(State*)> _enter;
+    std::function<void(void)> _leave;
+
 #if defined(HOTLOAD)
     std::unique_ptr<dylib> lib = nullptr;
 
     // releases the loaded library and loads it again
     void reload_library() {
-        TraceLog(LOG_INFO, "[hotload] releasing old library");
+        TraceLog(LOG_INFO, "[hotload] releasing previous");
         if (lib) lib.reset();
-        TraceLog(LOG_INFO, "[hotload] loading library");
+        TraceLog(LOG_INFO, "[hotload] loading");
         lib = std::make_unique<dylib>(HOTLOAD_LIBRARY_DIR, HOTLOAD_LIBRARY);
     }
 
     // rebinds the library's functions
     void rebind_library() {
-        TraceLog(LOG_INFO, "[hotload] binding functions");
+        TraceLog(LOG_INFO, "[hotload] binding");
         if (lib) {
             _initialize = lib->get_function<State*(void)>("bb_hotload_initialize");
             _update = lib->get_function<void(void)>("bb_hotload_release");
             _release = lib->get_function<void(State*)>("bb_hotload_update");
+
+            _enter = lib->get_function<void(State*)>("bb_hotload_enter");
+            _leave = lib->get_function<void(void)>("bb_hotload_leave");
         }
     }
 
     // reloads, rebinds
     void reload() {
         TraceLog(LOG_INFO, "[hotload] reloading");
+        leave();
         reload_library();
         rebind_library();
+        enter();
     }
 
     // just to maintain parity with the non-hotloaded version
     void prepare() {
-        reload();
+        reload_library();
+        rebind_library();
+        enter();
     }
 
     // does a hot reload check for the library
@@ -70,11 +80,24 @@ private:
             reload();
         }
     }
+
+    void leave() {
+        TraceLog(LOG_INFO, "[hotload] leaving previous");
+        _leave();
+    }
+
+    void enter() {
+        TraceLog(LOG_INFO, "[hotload] entering");
+        _enter(state);
+    }
 #else
     void prepare() {
         _initialize = ::bb_hotload_initialize;
         _update = ::bb_hotload_update;
         _release = ::bb_hotload_release;
+
+        _enter = ::bb_hotload_enter;
+        _leave = ::bb_hotload_leave;
     }
 #endif
 
@@ -83,19 +106,30 @@ public:
 
     Instance() {}
     ~Instance() {
-        terminate();
+        if (state != nullptr) {
+            TraceLog(LOG_WARNING, "[hotload] instance terminating without releasing the state");
+        }
     }
 
     State* initialize() {
-        // this will either bind the dynamic library or just set
-        // the static functions
+        TraceLog(LOG_DEBUG, "[hotload] initializing");
+
+        // this will either bind the dynamic library or just set static functions.
+        // when hotloading is enabled, it calls `_enter`.
+        // IMPORTANT: this happens before the state is set up.
         prepare();
+
+        // initializes the state
         state = _initialize();
         return state;
     }
 
     void terminate() {
+        TraceLog(LOG_DEBUG, "[hotload] terminating");
+
         if (state == nullptr) return;
+
+        _leave();
         _release(state);
         state = nullptr;
     }
