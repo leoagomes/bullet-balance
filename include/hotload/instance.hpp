@@ -50,8 +50,8 @@ private:
         TraceLog(LOG_INFO, "[hotload] binding");
         if (lib) {
             _initialize = lib->get_function<State*(void)>("bb_hotload_initialize");
-            _update = lib->get_function<void(void)>("bb_hotload_release");
-            _release = lib->get_function<void(State*)>("bb_hotload_update");
+            _update = lib->get_function<void(void)>("bb_hotload_update");
+            _release = lib->get_function<void(State*)>("bb_hotload_release");
 
             _enter = lib->get_function<void(State*)>("bb_hotload_enter");
             _leave = lib->get_function<void(void)>("bb_hotload_leave");
@@ -71,7 +71,6 @@ private:
     void prepare() {
         reload_library();
         rebind_library();
-        enter();
     }
 
     // does a hot reload check for the library
@@ -118,6 +117,9 @@ public:
         // when hotloading is enabled, it calls `_enter`.
         // IMPORTANT: this happens before the state is set up.
         prepare();
+
+        // no state yet, call enter with null
+        _enter(nullptr);
 
         // initializes the state
         state = _initialize();

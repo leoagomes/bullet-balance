@@ -31,7 +31,7 @@ clean() {
 build_native() {
     mkdir -p build
     cd build
-    cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+    cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug ..
     make
     cd ..
     copy_compile_commands
@@ -41,7 +41,7 @@ build_native() {
 build_web() {
     mkdir -p build
     cd build
-    emcmake cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DPLATFORM=Web ..
+    emcmake cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DPLATFORM=Web -DCMAKE_BUILD_TYPE=Debug ..
     emmake make
     cd ..
     copy_compile_commands
@@ -51,7 +51,7 @@ build_web() {
 build_hot() {
     mkdir -p build
     cd build
-    cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+    cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug ..
     make ${BINARY_NAME}_lib
     cd ..
     copy_compile_commands
@@ -61,7 +61,7 @@ build_hot() {
 run_hot() {
     mkdir -p build
     cd build
-    cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+    cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug ..
     make ${BINARY_NAME}_lib ${BINARY_NAME}_hotload
     cd ..
     copy_compile_commands
