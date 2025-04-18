@@ -4,7 +4,7 @@
 
 #include <functional>
 
-#include "game_state.hpp"
+#include "state.hpp"
 #include "hotload/interface.hpp"
 
 #if defined(HOTLOAD)
@@ -23,9 +23,9 @@ namespace bb::hotload {
 
 class Instance {
 private:
-    std::function<GameState*(void)> _initialize;
+    std::function<State*(void)> _initialize;
     std::function<void(void)> _update;
-    std::function<void(GameState*)> _release;
+    std::function<void(State*)> _release;
 
 #if defined(HOTLOAD)
     std::unique_ptr<dylib> lib = nullptr;
@@ -75,14 +75,14 @@ private:
 #endif
 
 public:
-    GameState* state = nullptr;
+    State* state = nullptr;
 
     Instance() {}
     ~Instance() {
         terminate();
     }
 
-    GameState* initialize() {
+    State* initialize() {
         // this will either bind the dynamic library or just set
         // the static functions
         prepare();

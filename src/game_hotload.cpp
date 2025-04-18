@@ -3,7 +3,7 @@
 
 #include "hotload/interface.hpp"
 
-bb::GameState* bb_hotload_initialize(void) {
+bb::State* bb_hotload_initialize(void) {
     return nullptr;
 }
 
@@ -14,5 +14,5 @@ void bb_hotload_update(void) {
     EndDrawing();
 }
 
-void bb_hotload_release(bb::GameState* state) {}
+void bb_hotload_release(bb::State* state) {}
 

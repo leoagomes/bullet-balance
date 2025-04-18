@@ -24,7 +24,7 @@ public:
 
 struct Bullet : public Entity {};
 
-struct GameState {
+struct State {
     std::vector<Entity> entities;
     std::vector<std::tuple<id_t, size_t>> entity_map;
 };
