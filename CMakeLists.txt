@@ -45,6 +45,10 @@ endif()
 set(JANET_DIR vendor/janet)
 file(GLOB JANET_SOURCES ${JANET_DIR}/*.c)
 
+# raygui
+set(RAYGUI_DIR vendor/raygui)
+file(GLOB RAYGUI_SOURCES ${RAYGUI_DIR}/*.c)
+
 # Main project
 set(INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set(SOURCE_DIR ${PROJECT_SOURCE_DIR}/src)
@@ -62,7 +66,9 @@ add_executable(${STATIC_EXECUTABLE} ${SOURCES})
 target_include_directories(
     ${STATIC_EXECUTABLE}
     PUBLIC ${INCLUDE_DIR}
-    PUBLIC ${JANET_DIR})
+    PUBLIC ${JANET_DIR}
+    PUBLIC ${RAYGUI_DIR}
+)
 
 set_target_properties(${STATIC_EXECUTABLE} PROPERTIES CXX_STANDARD 20)
 set_target_properties(${STATIC_EXECUTABLE} PROPERTIES C_STANDARD 99)
@@ -79,7 +85,9 @@ add_library(${HOTLOAD_LIBRARY} SHARED ${HOTLOAD_LIBRARY_SOURCES})
 target_include_directories(
     ${HOTLOAD_LIBRARY}
     PUBLIC ${INCLUDE_DIR}
-    PUBLIC ${JANET_DIR})
+    PUBLIC ${JANET_DIR}
+    PUBLIC ${RAYGUI_DIR}
+)
 target_link_libraries(${HOTLOAD_LIBRARY} PUBLIC raylib raylib_cpp)
 target_compile_definitions(${HOTLOAD_LIBRARY} PUBLIC HOTLOAD)
 
@@ -91,7 +99,9 @@ add_executable(${HOTLOAD_EXECUTABLE} ${HOTLOAD_EXECUTABLE_SOURCES})
 target_include_directories(
     ${HOTLOAD_EXECUTABLE}
     PUBLIC ${INCLUDE_DIR}
-    PUBLIC ${JANET_DIR})
+    PUBLIC ${JANET_DIR}
+    PUBLIC ${RAYGUI_DIR}
+)
 set_target_properties(${HOTLOAD_EXECUTABLE} PROPERTIES CXX_STANDARD 20)
 set_target_properties(${HOTLOAD_EXECUTABLE} PROPERTIES C_STANDARD 99)
 target_link_libraries(${HOTLOAD_EXECUTABLE} PUBLIC ${HOTLOAD_LIBRARY} dylib raylib raylib_cpp)
