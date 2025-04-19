@@ -1,8 +1,6 @@
 #pragma once
 
 #include <cstdint>
-#include <vector>
-#include <tuple>
 
 #include <entt/entt.hpp>
 

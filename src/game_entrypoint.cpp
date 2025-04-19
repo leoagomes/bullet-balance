@@ -1,5 +1,3 @@
-#include <memory>
-
 #include <raylib.h>
 #include <raylib-cpp.hpp>
 

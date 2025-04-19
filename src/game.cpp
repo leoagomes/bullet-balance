@@ -1,6 +1,3 @@
-#include <execution>
-#include <algorithm>
-
 #include <raylib-cpp.hpp>
 #include <raylib.hpp>
 
