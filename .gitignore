@@ -94,3 +94,4 @@ CMakeUserPresets.json
 !/build/.gitkeep
 .cache/
 
+.vscode/

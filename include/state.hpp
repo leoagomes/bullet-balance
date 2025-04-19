@@ -3,31 +3,46 @@
 #include <cstdint>
 #include <vector>
 #include <tuple>
-#include <raylib-cpp.hpp>
+
+#include <entt/entt.hpp>
 
 #include "types.hpp"
 
 namespace bb {
 
-enum class entity_type : uint8_t {
-    none = 0,
-    bullet,
+// enum class entity_type : uint8_t {
+//     none = 0,
+//     bullet,
+// };
+//
+// struct Entity {
+// public:
+//     id_t id = 0;
+//     entity_type type = entity_type::none;
+//     Vector2 position = Vector2::Zero();
+//     float radius = 0;
+//     Color color = Color::Black();
+// };
+//
+// struct Bullet : public Entity {};
+
+namespace components {
+
+struct position {
+    Vector2 value;
+};
+struct velocity {
+    Vector2 value;
+};
+struct radius {
+    float value;
 };
 
-struct Entity {
-public:
-    id_t id = 0;
-    entity_type type = entity_type::none;
-    Vector2 position = Vector2::Zero();
-    float radius = 0;
-    Color color = Color::Black();
 };
-
-struct Bullet : public Entity {};
 
 struct State {
-    std::vector<Entity> entities;
-    std::vector<std::tuple<id_t, size_t>> entity_map;
+    uint32_t tick = 0;
+    entt::registry registry;
 };
 
 };

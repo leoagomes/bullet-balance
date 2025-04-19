@@ -41,6 +41,19 @@ if (NOT dylib_FOUND)
     FetchContent_MakeAvailable(dylib)
 endif()
 
+# EnTT
+set(ENTT_VERSION v3.15.0)
+find_package(EnTT QUIET)
+if (NOT EnTT_FOUND)
+    include(FetchContent)
+    FetchContent_Declare(
+        EnTT
+        GIT_REPOSITORY "https://github.com/skypjack/entt"
+        GIT_TAG ${ENTT_VERSION}
+    )
+    FetchContent_MakeAvailable(EnTT)
+endif()
+
 # janet
 set(JANET_DIR vendor/janet)
 file(GLOB JANET_SOURCES ${JANET_DIR}/*.c)
@@ -73,7 +86,7 @@ target_include_directories(
 set_target_properties(${STATIC_EXECUTABLE} PROPERTIES CXX_STANDARD 20)
 set_target_properties(${STATIC_EXECUTABLE} PROPERTIES C_STANDARD 99)
 
-target_link_libraries(${STATIC_EXECUTABLE} PUBLIC raylib raylib_cpp)
+target_link_libraries(${STATIC_EXECUTABLE} PUBLIC raylib raylib_cpp EnTT)
 
 # hotload targets
 # library
@@ -88,7 +101,7 @@ target_include_directories(
     PUBLIC ${JANET_DIR}
     PUBLIC ${RAYGUI_DIR}
 )
-target_link_libraries(${HOTLOAD_LIBRARY} PUBLIC raylib raylib_cpp)
+target_link_libraries(${HOTLOAD_LIBRARY} PUBLIC raylib raylib_cpp EnTT)
 target_compile_definitions(${HOTLOAD_LIBRARY} PUBLIC HOTLOAD)
 
 # executable
@@ -104,7 +117,7 @@ target_include_directories(
 )
 set_target_properties(${HOTLOAD_EXECUTABLE} PROPERTIES CXX_STANDARD 20)
 set_target_properties(${HOTLOAD_EXECUTABLE} PROPERTIES C_STANDARD 99)
-target_link_libraries(${HOTLOAD_EXECUTABLE} PUBLIC ${HOTLOAD_LIBRARY} dylib raylib raylib_cpp)
+target_link_libraries(${HOTLOAD_EXECUTABLE} PUBLIC ${HOTLOAD_LIBRARY} dylib raylib raylib_cpp EnTT)
 target_compile_definitions(${HOTLOAD_EXECUTABLE}
     PUBLIC HOTLOAD
     PUBLIC HOTLOAD_LIBRARY="${HOTLOAD_LIBRARY}")

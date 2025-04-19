@@ -2,17 +2,13 @@
 
 #include "state.hpp"
 
-namespace bb {
+namespace bb::game {
 
-class Game {
-public:
-    State* state;
-    Game(State* state) : state(state) {
-        // at this point, state might be null
-    }
+extern State* state;
 
-    void update();
-};
+State* create_state();
+void free_state(State* state);
+void update();
 
 };
 

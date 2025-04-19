@@ -24,8 +24,7 @@ int main(void) {
 #if defined(PLATFORM_WEB)
     emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
 #else
-    SetTargetFPS(target_fps);
-
+    window.SetTargetFPS(target_fps);
     while (!window.ShouldClose()) {
         game.update();
     }
