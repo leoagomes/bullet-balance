@@ -4,7 +4,6 @@
 
 #include <entt/entt.hpp>
 
-#include "types.hpp"
 #include "util/spatial_hash.hpp"
 
 namespace bb {
