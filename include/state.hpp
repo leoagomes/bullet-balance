@@ -20,6 +20,7 @@ public:
     entity_type type = entity_type::none;
     Vector2 position = Vector2::Zero();
     float radius = 0;
+    Color color = Color::Black();
 };
 
 struct Bullet : public Entity {};
